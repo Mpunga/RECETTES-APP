@@ -1,0 +1,107 @@
+.ajouter-recette {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+
+  /* 👇 magie ici */
+  max-width: 450px;   /* largeur max */
+  width: 100%;
+  margin: 30px auto; /* centre horizontalement */
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeUp 0.4s ease;
+}
+
+/* When shown inside the modal, make the form scrollable and keep submit button visible */
+.recette-modal .ajouter-recette {
+  max-height: calc(80vh - 120px);
+  overflow: auto;
+  margin: 0; /* modal already centers */
+  padding-bottom: 70px; /* space for sticky button */
+}
+
+.recette-modal .ajouter-recette button[type="submit"] {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  right: 18px;
+  z-index: 20;
+  border-radius: 10px;
+}
+
+
+/* Titre */
+.ajouter-recette h2 {
+  margin: 0;
+  color: #ff4b5c;
+  text-align: center;
+}
+
+/* Inputs */
+.ajouter-recette input,
+.ajouter-recette textarea {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+  background: #fafafa;
+  transition: 0.3s;
+}
+
+.ajouter-recette textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.ajouter-recette input:focus,
+.ajouter-recette textarea:focus {
+  border-color: #ff4b5c;
+  box-shadow: 0 0 0 2px rgba(255,75,92,0.2);
+  background: white;
+}
+
+/* Bouton */
+.ajouter-recette button {
+  padding: 12px;
+  background: linear-gradient(135deg, #ff4b5c, #ff9a9e);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 5px 15px rgba(255,75,92,0.4);
+}
+
+.ajouter-recette button:hover {
+  transform: scale(1.05);
+}
+
+/* DARK MODE (auto avec ton body.dark) */
+body.dark .ajouter-recette {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+body.dark .ajouter-recette input,
+body.dark .ajouter-recette textarea {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+body.dark .ajouter-recette input::placeholder,
+body.dark .ajouter-recette textarea::placeholder {
+  color: #cbd5f5;
+}
+
+body.dark .ajouter-recette h2 {
+  color: #ff9a9e;
+}

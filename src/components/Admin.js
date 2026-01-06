@@ -1,10 +1,14 @@
 // src/components/Admin.js
-import React from "react";
+import AjouterRecette from "../AjouterRecette";
 
-export default function Admin({ chargerExemple }) {
+export default function Admin({ chargerExemple, ajouterRecette }) {
   return (
     <div className="admin">
-      <button onClick={chargerExemple}>Charger exemple</button>
+      <AjouterRecette ajouterRecette={ajouterRecette} />
+
+      {/* <button onClick={chargerExemple}>
+        Charger les recettes d'exemple
+      </button> */}
     </div>
   );
 }
