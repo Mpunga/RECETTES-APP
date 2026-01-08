@@ -1,0 +1,359 @@
+.admin-dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.admin-loading {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.admin-header {
+  margin-bottom: 2rem;
+}
+
+.admin-header h1 {
+  font-size: 2rem;
+  color: #ff4b5c;
+  margin: 0 0 0.5rem 0;
+}
+
+.admin-subtitle {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+}
+
+.stat-card:nth-child(2) {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.stat-card:nth-child(3) {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.stat-card:nth-child(4) {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.tab {
+  padding: 1rem 2rem;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab:hover {
+  color: #ff4b5c;
+}
+
+.tab.active {
+  color: #ff4b5c;
+  border-bottom-color: #ff4b5c;
+}
+
+.admin-content {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.users-table h2,
+.recipes-table h2 {
+  margin: 0 0 1.5rem 0;
+  color: #111;
+  font-size: 1.5rem;
+}
+
+.recipes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.recipes-header h2 {
+  margin: 0;
+}
+
+.btn-assign-orphans {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.btn-assign-orphans:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-assign-orphans:active {
+  transform: translateY(0);
+}
+
+.users-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.users-table th,
+.users-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.users-table th {
+  background: #f9fafb;
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.users-table tr:hover {
+  background: #f9fafb;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.role-badge.admin {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.role-badge.user {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-toggle-role,
+.btn-delete,
+.btn-view {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-toggle-role {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+}
+
+.btn-toggle-role:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
+}
+
+.btn-toggle-role:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-delete,
+.btn-delete-small {
+  background: linear-gradient(135deg, #ff4b5c, #ff9a9e);
+  color: white;
+}
+
+.btn-delete:hover,
+.btn-delete-small:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 75, 92, 0.3);
+}
+
+.btn-delete:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-view {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  width: 100%;
+}
+
+.btn-view:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.recipe-admin-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.recipe-admin-card:hover {
+  box-shadow: 0 4px 16px rgba(255, 75, 92, 0.15);
+  border-color: rgba(255, 75, 92, 0.3);
+}
+
+.recipe-admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.recipe-admin-header h3 {
+  margin: 0;
+  color: #ff4b5c;
+  font-size: 1.2rem;
+  flex: 1;
+}
+
+.btn-delete-small {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recipe-admin-info {
+  margin-bottom: 1rem;
+}
+
+.recipe-admin-info p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.recipe-ingredients-preview {
+  font-size: 0.85rem !important;
+  color: #6b7280 !important;
+  line-height: 1.4;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding: 1rem;
+  }
+
+  .admin-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .admin-tabs {
+    overflow-x: auto;
+  }
+
+  .tab {
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+  }
+
+  .users-table {
+    overflow-x: auto;
+  }
+
+  .users-table table {
+    min-width: 800px;
+  }
+
+  .recipes-grid {
+    grid-template-columns: 1fr;
+  }
+}

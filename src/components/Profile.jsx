@@ -1,10 +1,78 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { auth, database} from "../base";
-import { ref as dbRef, get, set, update, onValue, remove } from "firebase/database";
+import { showToast } from "../toast";
+import { ref as dbRef, get, set, update, onValue, remove, push } from "firebase/database";
 import { useNavigate } from "react-router-dom";
 import './Profile.css';
 import './RecetteModal.css';
 import AjouterRecette from '../AjouterRecette';
+
+// Liste des pays avec leurs capitales
+const PAYS_CAPITALES = {
+  "France": "Paris",
+  "Belgique": "Bruxelles",
+  "Suisse": "Berne",
+  "Canada": "Ottawa",
+  "États-Unis": "Washington D.C.",
+  "Royaume-Uni": "Londres",
+  "Allemagne": "Berlin",
+  "Italie": "Rome",
+  "Espagne": "Madrid",
+  "Portugal": "Lisbonne",
+  "Pays-Bas": "Amsterdam",
+  "Maroc": "Rabat",
+  "Algérie": "Alger",
+  "Tunisie": "Tunis",
+  "Sénégal": "Dakar",
+  "Côte d'Ivoire": "Yamoussoukro",
+  "Cameroun": "Yaoundé",
+  "Congo (RDC)": "Kinshasa",
+  "Madagascar": "Antananarivo",
+  "Mali": "Bamako",
+  "Burkina Faso": "Ouagadougou",
+  "Niger": "Niamey",
+  "Tchad": "N'Djamena",
+  "Gabon": "Libreville",
+  "Guinée": "Conakry",
+  "Bénin": "Porto-Novo",
+  "Togo": "Lomé",
+  "Rwanda": "Kigali",
+  "Burundi": "Gitega",
+  "Haïti": "Port-au-Prince",
+  "Luxembourg": "Luxembourg",
+  "Monaco": "Monaco"
+};
+
+// Capitales alternatives pour certains pays
+const CAPITALES_PAR_PAYS = {
+  "France": ["Paris", "Lyon", "Marseille", "Toulouse", "Bordeaux", "Nantes", "Lille", "Strasbourg"],
+  "Belgique": ["Bruxelles", "Anvers", "Gand", "Charleroi", "Liège", "Bruges"],
+  "Suisse": ["Berne", "Zurich", "Genève", "Bâle", "Lausanne", "Lucerne"],
+  "Canada": ["Ottawa", "Toronto", "Montréal", "Vancouver", "Québec", "Calgary", "Edmonton"],
+  "États-Unis": ["Washington D.C.", "New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia"],
+  "Maroc": ["Rabat", "Casablanca", "Marrakech", "Fès", "Tanger", "Agadir", "Meknès"],
+  "Algérie": ["Alger", "Oran", "Constantine", "Annaba", "Batna", "Sétif"],
+  "Tunisie": ["Tunis", "Sfax", "Sousse", "Kairouan", "Bizerte", "Gabès"],
+  "Sénégal": ["Dakar", "Thiès", "Kaolack", "Saint-Louis", "Ziguinchor"],
+  "Cameroun": ["Yaoundé", "Douala", "Bafoussam", "Garoua", "Bamenda"],
+  "Côte d'Ivoire": ["Yamoussoukro", "Abidjan", "Bouaké", "Daloa", "San-Pédro"],
+  "Congo (RDC)": ["Kinshasa", "Lubumbashi", "Mbuji-Mayi", "Kananga", "Kisangani", "Goma", "Bukavu"]
+};
+
+// Provinces par pays
+const PROVINCES_PAR_PAYS = {
+  "France": ["Île-de-France", "Auvergne-Rhône-Alpes", "Nouvelle-Aquitaine", "Occitanie", "Hauts-de-France", "Provence-Alpes-Côte d'Azur", "Grand Est", "Bretagne", "Pays de la Loire", "Normandie", "Bourgogne-Franche-Comté", "Centre-Val de Loire", "Corse"],
+  "Belgique": ["Région flamande", "Région wallonne", "Région de Bruxelles-Capitale", "Anvers", "Brabant flamand", "Brabant wallon", "Flandre-Occidentale", "Flandre-Orientale", "Hainaut", "Liège", "Limbourg", "Luxembourg", "Namur"],
+  "Suisse": ["Zurich", "Berne", "Lucerne", "Uri", "Schwyz", "Genève", "Vaud", "Valais", "Neuchâtel", "Fribourg", "Jura", "Tessin"],
+  "Canada": ["Alberta", "Colombie-Britannique", "Manitoba", "Nouveau-Brunswick", "Terre-Neuve-et-Labrador", "Nouvelle-Écosse", "Ontario", "Île-du-Prince-Édouard", "Québec", "Saskatchewan"],
+  "Maroc": ["Tanger-Tétouan-Al Hoceïma", "Oriental", "Fès-Meknès", "Rabat-Salé-Kénitra", "Béni Mellal-Khénifra", "Casablanca-Settat", "Marrakech-Safi", "Drâa-Tafilalet", "Souss-Massa", "Guelmim-Oued Noun", "Laâyoune-Sakia El Hamra", "Dakhla-Oued Ed-Dahab"],
+  "Algérie": ["Alger", "Oran", "Constantine", "Annaba", "Sétif", "Batna", "Blida", "Tizi Ouzou", "Béjaïa", "Tlemcen"],
+  "Tunisie": ["Tunis", "Ariana", "Ben Arous", "Bizerte", "Gabès", "Gafsa", "Jendouba", "Kairouan", "Kasserine", "Kébili", "Mahdia", "Sfax", "Sousse"],
+  "Sénégal": ["Dakar", "Diourbel", "Fatick", "Kaffrine", "Kaolack", "Kédougou", "Kolda", "Louga", "Matam", "Saint-Louis", "Sédhiou", "Tambacounda", "Thiès", "Ziguinchor"],
+  "Cameroun": ["Adamaoua", "Centre", "Est", "Extrême-Nord", "Littoral", "Nord", "Nord-Ouest", "Ouest", "Sud", "Sud-Ouest"],
+  "Côte d'Ivoire": ["Abidjan", "Bas-Sassandra", "Comoé", "Denguélé", "Gôh-Djiboua", "Lacs", "Lagunes", "Montagnes", "Sassandra-Marahoué", "Savanes", "Vallée du Bandama", "Woroba", "Yamoussoukro", "Zanzan"],
+  "Congo (RDC)": ["Kinshasa", "Kongo-Central", "Kwango", "Kwilu", "Mai-Ndombe", "Kasaï", "Kasaï-Central", "Kasaï-Oriental", "Lomami", "Sankuru", "Maniema", "Sud-Kivu", "Nord-Kivu", "Ituri", "Haut-Uélé", "Tshopo", "Bas-Uélé", "Nord-Ubangi", "Mongala", "Sud-Ubangi", "Équateur", "Tshuapa", "Tanganyika", "Haut-Lomami", "Lualaba", "Haut-Katanga"]
+};
 
 
 export default function Profile() {
@@ -18,7 +86,20 @@ export default function Profile() {
   const [editingRecipe, setEditingRecipe] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
+  const [feedbackText, setFeedbackText] = useState('');
+  const [feedbackEmail, setFeedbackEmail] = useState('');
   const navigate = useNavigate();
+
+  // Fonctions helper pour obtenir les options de sélection
+  const getCapitalesOptions = () => {
+    if (!form.pays) return [];
+    return CAPITALES_PAR_PAYS[form.pays] || [PAYS_CAPITALES[form.pays]];
+  };
+
+  const getProvincesOptions = () => {
+    if (!form.pays) return [];
+    return PROVINCES_PAR_PAYS[form.pays] || [];
+  };
 
  useEffect(() => {
   const unsub = auth.onAuthStateChanged(user => {
@@ -76,12 +157,14 @@ useEffect(() => {
       nom: "Utilisateur",
       prenom: "Inconnu",
       email: user.email,
-      pays: "pays",
+      pays: "France",
+      capital: "Paris",
+      province: "",
       photo: "https://i.pravatar.cc/150?u=" + user.uid,
-      bio: "Nouveau membre 🍽️",
+      bio: "Nouveau membre ",
       createdAt: Date.now()
     });
-    alert("Profil créé 🚀");
+    showToast("Profil créé ", { type: 'success' });
     // update local state instead of forcing a reload
     const snapshot = await get(dbRef(database, "users/" + user.uid));
     if (snapshot.exists()) {
@@ -102,7 +185,7 @@ useEffect(() => {
     setProfile(form);
     setEditMode(false);
     setPhotoPreview(null);
-    alert("Profil mis à jour ✅");
+    showToast("Profil mis à jour ", { type: 'success' });
   };
 
   /* const handlePhotoChange = async e => {
@@ -116,7 +199,7 @@ useEffect(() => {
 
     await update(dbRef(database, "users/" + user.uid), { photo: url });
     setProfile(prev => ({ ...prev, photo: url }));
-    alert("Photo mise à jour 📸");
+    showToast("Photo mise à jour ", { type: 'success' });
   }; */
 
  const handlePhotoChange = e => {
@@ -138,10 +221,10 @@ useEffect(() => {
     if (!window.confirm('Supprimer cette recette ?')) return;
     try {
       await remove(dbRef(database, `recettes/${id}`));
-      alert('Recette supprimée');
+      showToast('Recette supprimée', { type: 'success' });
     } catch (err) {
       console.error(err);
-      alert('Erreur lors de la suppression');
+      showToast('Erreur lors de la suppression', { type: 'error', duration: 5000 });
     }
   };
 
@@ -155,20 +238,47 @@ useEffect(() => {
     setShowAddForm(true);
   };
 
+  const submitFeedback = async (e) => {
+    e.preventDefault();
+    const message = (feedbackText || '').trim();
+    if (!message) {
+      showToast('Merci de saisir un retour', { type: 'error', duration: 3000 });
+      return;
+    }
+
+    const user = auth.currentUser;
+    const payload = {
+      message,
+      email: (feedbackEmail || user?.email || '').trim(),
+      authorId: user?.uid || null,
+      createdAt: Date.now()
+    };
+
+    try {
+      await push(dbRef(database, 'feedback'), payload);
+      setFeedbackText('');
+      setFeedbackEmail('');
+      showToast('Merci pour votre feedback ! ', { type: 'success' });
+    } catch (err) {
+      console.error(err);
+      showToast('Erreur lors de l\'envoi du feedback', { type: 'error', duration: 4000 });
+    }
+  };
+
 
   if (loading) return <p>Chargement profil...</p>;
   if (missing)
     return (
       <div className="profile-missing">
-        <h2>Profil introuvable 😬</h2>
-        <p>Ton compte existe mais ton profil n’a jamais été créé.</p>
+        <h2>Profil introuvable </h2>
+        <p>Ton compte existe mais ton profil n'a jamais été créé.</p>
         <button onClick={createProfile}>Créer mon profil</button>
       </div>
     );
 
   return (
     <div className="profile">
-      <button className="back-btn" onClick={() => navigate(-1)}>⬅ Retour</button>
+      <button className="back-btn" onClick={() => navigate(-1)}> Retour</button>
 
       <div className="profile-card">
         <div className="profile-photo">
@@ -195,8 +305,57 @@ useEffect(() => {
 
               <label className="field">
                 Pays
-                <input name="pays" value={form.pays || ""} onChange={handleChange} placeholder="Pays" />
+                <select 
+                  name="pays" 
+                  value={form.pays || ""} 
+                  onChange={(e) => {
+                    const pays = e.target.value;
+                    setForm({ 
+                      ...form, 
+                      pays, 
+                      capital: CAPITALES_PAR_PAYS[pays]?.[0] || PAYS_CAPITALES[pays] || "",
+                      province: ""
+                    });
+                  }}
+                >
+                  <option value="">🌍 Sélectionnez</option>
+                  {Object.keys(PAYS_CAPITALES).sort().map(p => (
+                    <option key={p} value={p}>{p}</option>
+                  ))}
+                </select>
               </label>
+
+              {form.pays && (
+                <label className="field">
+                  Ville
+                  <select 
+                    name="capital" 
+                    value={form.capital || ""} 
+                    onChange={handleChange}
+                  >
+                    <option value="">🏙️ Sélectionnez</option>
+                    {getCapitalesOptions().map(ville => (
+                      <option key={ville} value={ville}>{ville}</option>
+                    ))}
+                  </select>
+                </label>
+              )}
+
+              {form.pays && getProvincesOptions().length > 0 && (
+                <label className="field">
+                  Province / Région
+                  <select 
+                    name="province" 
+                    value={form.province || ""} 
+                    onChange={handleChange}
+                  >
+                    <option value="">📍 Facultatif</option>
+                    {getProvincesOptions().map(prov => (
+                      <option key={prov} value={prov}>{prov}</option>
+                    ))}
+                  </select>
+                </label>
+              )}
 
               <label className="field">
                 Bio
@@ -204,8 +363,8 @@ useEffect(() => {
               </label>
 
               <div className="profile-actions">
-                <button className="primary" onClick={handleSave}>Enregistrer ✅</button>
-                <button className="secondary" onClick={() => setEditMode(false)}>Annuler ❌</button>
+                <button className="primary" onClick={handleSave}>Enregistrer </button>
+                <button className="secondary" onClick={() => setEditMode(false)}>Annuler </button>
               </div>
             </div>
           ) : (
@@ -213,27 +372,66 @@ useEffect(() => {
                 <div className="profile-header">
                 <div>
                   <h1>{profile.prenom} {profile.nom}</h1>
-                  <h3>{profile.pays}</h3>
+                  <h3>
+                    {profile.pays}
+                    {profile.province && ` • ${profile.province}`}
+                  </h3>
                 </div>
                 <div className="profile-actions-inline">
-                  <button className="primary" onClick={() => setEditMode(true)}>✏️ Modifier profil</button>
+                  <button className="primary" onClick={() => setEditMode(true)}> Modifier profil</button>
                 </div>
               </div>
 
               <p className="profile-bio">{profile.bio}</p>
 
+              {profile.role === 'admin' && (
+                <div className="admin-access" style={{marginTop:16}}>
+                  <button 
+                    className="admin-button" 
+                    onClick={() => navigate('/admin')}
+                  >
+                    🛡️ Accéder au Dashboard Admin
+                  </button>
+                </div>
+              )}
+
               <div style={{marginTop:16}}>
-                <button className="primary" onClick={() => setShowRecetteModal(true)}>➕ Gérer mes recettes</button>
+                <button className="primary" onClick={() => setShowRecetteModal(true)}> Gérer mes recettes</button>
               </div>
+
+              <div className="feedback-section">
+                <h3> Votre feedback</h3>
+                <p className="feedback-hint">Dites-nous ce qui fonctionne ou ce qu'on doit améliorer.</p>
+                <form className="feedback-form" onSubmit={submitFeedback}>
+                  <textarea
+                    value={feedbackText}
+                    onChange={(e) => setFeedbackText(e.target.value)}
+                    placeholder="Partager une idée, un bug ou une suggestion..."
+                    rows="3"
+                    maxLength="500"
+                    required
+                  />
+                  <div className="feedback-row">
+                    <input
+                      type="email"
+                      value={feedbackEmail}
+                      onChange={(e) => setFeedbackEmail(e.target.value)}
+                      placeholder="Votre email (optionnel)"
+                    />
+                    <button type="submit">Envoyer</button>
+                  </div>
+                </form>
+              </div>
+
           {showRecetteModal && (
             <div className="recette-modal-overlay" onClick={() => { setShowRecetteModal(false); setShowAddForm(false); }}>
               <div className="recette-modal" onClick={e => e.stopPropagation()}>
-                <button className="recette-modal-close" onClick={() => { setShowRecetteModal(false); setShowAddForm(false); }}>✖</button>
+                <button className="recette-modal-close" onClick={() => { setShowRecetteModal(false); setShowAddForm(false); }}></button>
                 <h3>Gérer mes recettes</h3>
 
                 {!showAddForm ? (
                   <div>
-                    <button style={{marginBottom:10}} onClick={openAdd}>➕ Ajouter une recette</button>
+                    <button style={{marginBottom:10}} onClick={openAdd}> Ajouter une recette</button>
                     <div>
                       {userRecipes.length === 0 && <p>Aucune recette pour l'instant.</p>}
                       {userRecipes.map(r => (
@@ -246,8 +444,8 @@ useEffect(() => {
                             </div>
                           </div>
                           <div>
-                            <button onClick={() => openEdit(r)} style={{marginRight:8}}>✏️ Edit</button>
-                            <button onClick={() => handleDeleteRecipe(r.id)}>🗑️ Suppr</button>
+                            <button onClick={() => openEdit(r)} style={{marginRight:8}}> Edit</button>
+                            <button onClick={() => handleDeleteRecipe(r.id)}> Suppr</button>
                           </div>
                         </div>
                       ))}
@@ -255,7 +453,7 @@ useEffect(() => {
                   </div>
                 ) : (
                   <div>
-                    <button onClick={() => setShowAddForm(false)} style={{marginBottom:10}}>← Retour à la liste</button>
+                    <button className="back-btn" onClick={() => setShowAddForm(false)}> Retour à la liste</button>
                     <AjouterRecette initial={editingRecipe || undefined} recipeId={editingRecipe?.id} onSuccess={() => { setShowAddForm(false); setShowRecetteModal(false); }} />
                   </div>
                 )}
@@ -269,3 +467,4 @@ useEffect(() => {
     </div>
   );
 }   
+

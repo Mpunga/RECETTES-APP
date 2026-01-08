@@ -1,36 +1,5 @@
 /* Feed (full-screen) styles scoped under .feed */
-.feed .cards {
-	display: block;
-	height: 100vh;
-	overflow-y: auto;
-	overflow-x: hidden;
-	width: 100%;
-	scroll-snap-type: y mandatory;
-	-webkit-overflow-scrolling: touch;
-	padding: 0;
-	gap: 0;
-}
-
-/* Global card style for non-feed contexts to match other cards */
-.card {
-	background: #fff;
-	padding: 14px;
-	border-radius: 12px;
-	box-shadow: 0 8px 18px rgba(0,0,0,0.08);
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-}
-
-.card img,
-.card .card-img {
-	width: 100%;
-	height: 220px;
-	object-fit: cover;
-	border-radius: 12px;
-}
-
-.card h3,
+/* Count badges removed; counts now appear inside buttons for clarity */
 .card .card-title {
 	margin: 6px 0 0 0;
 	color: #e63946;
@@ -112,6 +81,7 @@
 	flex-direction: column;
 	gap: 8px;
 	min-height: 180px;
+	height: 100%; /* occupe toute la hauteur de la cellule de grille */
 }
 
 .recipe-card .card-img {
@@ -198,6 +168,68 @@ body.dark .feed .card button {
 .meta-col ol { margin: 0; padding-left: 18px; font-size: 13px; color: #444; max-height: 120px; overflow: auto; }
 
 .card-action { align-self: stretch; padding: 10px; border-radius: 10px; background: linear-gradient(45deg,#ff6b6b,#ff9a9e); border: none; color: white; cursor: pointer; }
+
+.card-actions-row {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-top: 4px;
+}
+
+.card-actions-row .reactions-container.inline {
+	flex: 1;
+	min-width: 180px;
+}
+
+.card-actions-row .follow-btn {
+	padding: 8px 14px;
+	min-width: 100px;
+}
+
+.card-actions-row .card-action {
+	flex: 1;
+	min-width: 150px;
+	padding: 10px 12px;
+}
+
+.count-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 34px;
+	padding: 6px 8px;
+	border-radius: 10px;
+	background: #f1f5f9;
+	color: #0f172a;
+	font-size: 12px;
+	font-weight: 700;
+	border: 1px solid #e2e8f0;
+}
+
+.follow-with-count,
+.reactions-with-count {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	flex: 1;
+	min-width: 160px;
+}
+
+.reactions-with-count .reactions-container.inline {
+	flex: 1;
+}
+
+/* Ensure extra breathing room between reactions and the action button */
+.card-actions-row .reactions-with-count {
+	margin-right: 6px;
+}
+
+body.dark .count-badge {
+	background: rgba(255,255,255,0.06);
+	color: #e5e7eb;
+	border-color: rgba(255,255,255,0.08);
+}
 
 @media (max-width: 720px) {
 	.card-media .card-img { height: 200px; }

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./AjouterRecette.css";
 import { auth, database } from "./base";
 import { ref as dbRef, set } from "firebase/database";
+import { showToast } from "./toast";
 
 export default class AjouterRecette extends Component {
   constructor(props) {
@@ -55,7 +56,7 @@ export default class AjouterRecette extends Component {
     e.preventDefault();
 
     const user = auth.currentUser;
-    if (!user) return alert('Vous devez être connecté pour ajouter une recette.');
+    if (!user) return showToast('Vous devez être connecté pour ajouter une recette.', { type: 'error', duration: 4000 });
 
     try {
       if (this.props.recipeId) {
@@ -69,7 +70,7 @@ export default class AjouterRecette extends Component {
         };
 
         await set(dbRef(database, `recettes/${this.props.recipeId}`), recette);
-        alert('Recette mise à jour ✅');
+        showToast('Recette mise à jour ✅', { type: 'success' });
       } else {
         const key = `recette-${Date.now()}`;
         const recette = {
@@ -81,7 +82,7 @@ export default class AjouterRecette extends Component {
           createdAt: Date.now()
         };
         await set(dbRef(database, `recettes/${key}`), recette);
-        alert('Recette ajoutée ✅');
+        showToast('Recette ajoutée ✅', { type: 'success' });
       }
 
       this.setState({ nom: "", image: "", ingredients: "", instructions: "" });
@@ -89,7 +90,7 @@ export default class AjouterRecette extends Component {
       if (this.props.onSuccess) this.props.onSuccess();
     } catch (err) {
       console.error(err);
-      alert('Erreur lors de l\'enregistrement de la recette.');
+      showToast('Erreur lors de l\'enregistrement de la recette.', { type: 'error', duration: 5000 });
     }
   };
 

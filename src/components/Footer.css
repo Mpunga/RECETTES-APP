@@ -1,0 +1,242 @@
+.app-footer {
+  background: linear-gradient(135deg, #ff4b5c, #ff9a9e);
+  color: white;
+  margin-top: 60px;
+  padding: 40px 20px 20px;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -4px 20px rgba(255, 75, 92, 0.15);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 2fr 1.5fr;
+  gap: 40px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  font-size: 36px;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.footer-tagline {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.9;
+  line-height: 1.5;
+  max-width: 280px;
+}
+
+.footer-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.footer-section h4 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-section a {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  opacity: 0.85;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.footer-section a:hover {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+.footer-social h4 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.social-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.social-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.social-links a:hover {
+  background: white;
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.social-links a:hover svg {
+  color: #ff4b5c;
+}
+
+.social-links svg {
+  width: 20px;
+  height: 20px;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-bottom p {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.footer-made-with {
+  font-weight: 600;
+}
+
+.heart {
+  display: inline-block;
+  animation: heartbeat 1.5s ease-in-out infinite;
+  color: #ffe0e0;
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .footer-content {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+    text-align: center;
+    align-items: center;
+  }
+
+  .footer-tagline {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-footer {
+    margin-top: 40px;
+    padding: 30px 16px 16px;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .footer-links {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .footer-social {
+    text-align: center;
+  }
+
+  .social-links {
+    justify-content: center;
+  }
+
+  .footer-bottom {
+    font-size: 12px;
+  }
+
+  .logo-text {
+    font-size: 20px;
+  }
+
+  .logo-icon {
+    font-size: 30px;
+  }
+}
+
+/* Dark mode */
+body.dark .app-footer {
+  background: linear-gradient(135deg, rgba(255, 75, 92, 0.15), rgba(255, 154, 158, 0.12));
+  border-top: 1px solid rgba(255, 75, 92, 0.3);
+}
+
+body.dark .social-links a {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+body.dark .social-links a:hover {
+  background: rgba(255, 107, 122, 0.3);
+  box-shadow: 0 8px 20px rgba(255, 107, 122, 0.3);
+}
+
+body.dark .social-links a:hover svg {
+  color: #ff6b7a;
+}

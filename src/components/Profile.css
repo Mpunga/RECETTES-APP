@@ -1,13 +1,24 @@
-.profile {
+﻿.profile {
   padding: 20px;
 }
 
-.back-btn {
-  background: transparent;
-  border: none;
+/* Style moderne pour tous les boutons retour */
+.back-btn,
+.recette-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(255, 75, 92, 0.08), rgba(255, 154, 158, 0.08));
+  border: 1px solid rgba(255, 75, 92, 0.2);
+  color: #ff4b5c;
   font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 24px;
   cursor: pointer;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(255, 75, 92, 0.1);
 }
 
 .profile-card {
@@ -80,7 +91,8 @@
 .profile-edit input[type="text"],
 .profile-edit input[type="email"],
 .profile-edit textarea,
-.profile-edit input[type="file"] {
+.profile-edit input[type="file"],
+.profile-edit select {
   display: block;
   width: 100%;
   padding: 10px 12px;
@@ -89,6 +101,24 @@
   border: 1px solid #eee;
   border-radius: 8px;
   background: #fafafa;
+}
+
+.profile-edit select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ff4b5c' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  padding-right: 40px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.profile-edit select option {
+  background: white;
+  color: #333;
+  padding: 10px;
 }
 
 .profile-edit textarea { min-height: 120px; resize: vertical; }
@@ -131,9 +161,208 @@
   padding: 8px 12px;
 }
 
+.admin-button {
+  background: linear-gradient(135deg, #ff4b5c, #ff9a9e);
+  color: white;
+  padding: 14px 28px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(255, 75, 92, 0.3);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.admin-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(255, 75, 92, 0.4);
+}
+
 @media (max-width: 700px) {
   .profile-card { flex-direction: column; align-items: center; }
   .profile-photo img { width: 120px; height: 120px; }
   .profile-main { width: 100%; }
   .profile-edit { grid-template-columns: 1fr; }
+}
+
+/* Dark mode overrides */
+body.dark .profile-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: none;
+  color: #e5e7eb;
+}
+
+body.dark /* Style moderne pour tous les boutons retour */
+.back-btn,
+.recette-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(255, 75, 92, 0.08), rgba(255, 154, 158, 0.08));
+  border: 1px solid rgba(255, 75, 92, 0.2);
+  color: #ff4b5c;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 24px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(255, 75, 92, 0.1);
+}
+
+body.dark .profile-info h3,
+body.dark .profile-bio {
+  color: #e5e7eb;
+}
+
+body.dark .profile-edit input[type="text"],
+body.dark .profile-edit input[type="email"],
+body.dark .profile-edit textarea,
+body.dark .profile-edit select {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #e5e7eb;
+}
+
+body.dark .profile-edit select option {
+  background: #1a1a1a;
+  color: white;
+}
+
+body.dark .profile button.secondary {
+  color: #e5e7eb;
+  border-color: rgba(255,255,255,0.06);
+}
+
+.feedback-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.feedback-section h3 {
+  margin: 0 0 6px 0;
+  color: #111;
+}
+
+.feedback-hint {
+  margin: 0 0 12px 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feedback-form textarea {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  padding: 12px;
+  font-size: 14px;
+  resize: vertical;
+  min-height: 96px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feedback-form textarea:focus {
+  border-color: #ff4b5c;
+  box-shadow: 0 0 0 3px rgba(255,75,92,0.15);
+}
+
+.feedback-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.feedback-row input[type="email"] {
+  flex: 1;
+  min-width: 220px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  padding: 10px 12px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feedback-row input[type="email"]:focus {
+  border-color: #ff4b5c;
+  box-shadow: 0 0 0 3px rgba(255,75,92,0.15);
+}
+
+.feedback-row button[type="submit"] {
+  background: linear-gradient(135deg, #ff4b5c, #ff9a9e);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(255,75,92,0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feedback-row button[type="submit"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(255,75,92,0.3);
+}
+
+body.dark .feedback-section {
+  border-color: rgba(255,255,255,0.1);
+}
+
+body.dark .feedback-section h3 {
+  color: #e5e7eb;
+}
+
+body.dark .feedback-hint {
+  color: #9ca3af;
+}
+
+body.dark .feedback-form textarea,
+body.dark .feedback-row input[type="email"] {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.1);
+  color: #e5e7eb;
+}
+
+body.dark .feedback-form textarea::placeholder,
+body.dark .feedback-row input[type="email"]::placeholder {
+  color: #9ca3af;
+}
+
+.back-btn:hover,
+  .recette-back:hover {
+    background: linear-gradient(135deg, rgba(255, 107, 122, 0.2), rgba(255, 154, 158, 0.2));
+    border-color: rgba(255, 107, 122, 0.5);
+    box-shadow: 0 4px 12px rgba(255, 107, 122, 0.25);
+  }
+
+/* Dark mode */
+body.dark .back-btn,
+body.dark .recette-back {
+  background: linear-gradient(135deg, rgba(255, 107, 122, 0.12), rgba(255, 154, 158, 0.12));
+  border-color: rgba(255, 107, 122, 0.3);
+  color: #ff6b7a;
+}
+
+body.dark .back-btn:hover,
+body.dark .recette-back:hover {
+  background: linear-gradient(135deg, rgba(255, 107, 122, 0.2), rgba(255, 154, 158, 0.2));
+  border-color: rgba(255, 107, 122, 0.5);
+  box-shadow: 0 4px 12px rgba(255, 107, 122, 0.25);
 }

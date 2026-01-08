@@ -2,15 +2,21 @@ import React, { Component } from "react";
 import { auth } from "../base";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { withRouter } from "../withRouter"; // wrapper pour navigation
+import { showToast } from "../toast";
 
 class Login extends Component {
   state = {
     email: "",
-    password: ""
+    password: "",
+    showPassword: false
   };
 
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
+  };
+
+  togglePasswordVisibility = () => {
+    this.setState({ showPassword: !this.state.showPassword });
   };
 
   login = async e => {
@@ -20,15 +26,42 @@ class Login extends Component {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      alert("Connecté 🚀");
+      showToast("Connecté 🚀", { duration: 3000 });
       navigate("/"); // redirection vers App
     } catch (err) {
-      alert("Erreur : " + err.message);
+      // Messages d'erreur personnalisés en français
+      let errorMessage = "Erreur de connexion";
+      
+      switch (err.code) {
+        case 'auth/invalid-credential':
+        case 'auth/user-not-found':
+          errorMessage = "❌ Aucun compte trouvé avec cet email";
+          break;
+        case 'auth/wrong-password':
+          errorMessage = "❌ Mot de passe incorrect";
+          break;
+        case 'auth/invalid-email':
+          errorMessage = "❌ Email invalide";
+          break;
+        case 'auth/user-disabled':
+          errorMessage = "❌ Ce compte a été désactivé";
+          break;
+        case 'auth/too-many-requests':
+          errorMessage = "❌ Trop de tentatives. Réessayez plus tard";
+          break;
+        case 'auth/network-request-failed':
+          errorMessage = "❌ Problème de connexion Internet";
+          break;
+        default:
+          errorMessage = `❌ ${err.message}`;
+      }
+      
+      showToast(errorMessage, { type: 'error', duration: 5000 });
     }
   };
 
   render() {
-    const { email, password } = this.state;
+    const { email, password, showPassword } = this.state;
 
     return (
       <div className="auth-page">
@@ -46,13 +79,21 @@ class Login extends Component {
             />
             <input
               className="full"
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Mot de passe"
               value={password}
               onChange={this.handleChange}
               required
             />
+            <label className="show-password-label">
+              <input
+                type="checkbox"
+                checked={showPassword}
+                onChange={this.togglePasswordVisibility}
+              />
+              <span>Afficher le mot de passe</span>
+            </label>
             <button type="submit">Se connecter</button>
           </form>
 

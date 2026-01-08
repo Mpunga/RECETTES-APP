@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ref, get } from 'firebase/database';
 import { database } from '../base';
+import Reactions from './Reactions';
+import Comments from './Comments';
+import FollowButton from './FollowButton';
 import './Recette.css';
 
 function resolveImage(src) {
@@ -27,16 +30,17 @@ export default function Recette() {
     // First try to get by id
     get(ref(database, `recettes/${tryId}`)).then(snap => {
       if (snap.exists()) {
-        setRecette(snap.val());
+        setRecette({ id: tryId, ...snap.val() });
         setLoading(false);
       } else {
         // Fallback: search by decoded name
         const decoded = decodeURIComponent(nom || '');
         get(ref(database, 'recettes')).then(all => {
           const data = all.val() || {};
-          const found = Object.values(data).find(r => r.nom === decoded);
-          if (found) {
-            setRecette(found);
+          const foundEntry = Object.entries(data).find(([, r]) => r.nom === decoded);
+          if (foundEntry) {
+            const [foundId, found] = foundEntry;
+            setRecette({ id: foundId, ...found });
           } else {
             setNotFound(true);
           }
@@ -60,7 +64,7 @@ export default function Recette() {
       <div className="recette-container">
         <div className="recette-card">
           <p>Recette introuvable.</p>
-          <button className="recette-back" onClick={() => navigate(-1)}>Retour</button>
+          <button className="recette-back" onClick={() => navigate(-1)}> Retour</button>
         </div>
       </div>
     );
@@ -74,6 +78,18 @@ export default function Recette() {
         <button className="recette-back" onClick={() => navigate(-1)}>← Retour</button>
 
         <h1 className="recette-title">{recette.nom}</h1>
+
+        {recette.authorId && (
+          <div className="recette-author-row">
+            <button 
+              className="recette-author-btn"
+              onClick={() => navigate(`/profile/${recette.authorId}`)}
+            >
+              👤 Voir le profil du créateur
+            </button>
+            <FollowButton targetUid={recette.authorId} />
+          </div>
+        )}
 
         {imgSrc ? (
           <img className="recette-img" src={imgSrc} alt={recette.nom} loading="lazy" />
@@ -96,7 +112,15 @@ export default function Recette() {
             ))}
           </ol>
         </div>
+
+        <div className="recette-section">
+          <h3>💖 Réactions</h3>
+          <Reactions recetteId={recette.id || nom} ingredients={recette.ingredients} />
+        </div>
+
+        <Comments recetteId={recette.id || nom} ingredients={recette.ingredients} />
       </div>
     </div>
   );
 }
+

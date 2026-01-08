@@ -36,3 +36,30 @@
 @media (max-width: 600px) {
   .recette-modal { padding: 12px; margin: 0 8px; }
 }
+
+/* Dark mode overrides for the modal */
+body.dark .recette-modal-overlay {
+  background: rgba(0,0,0,0.6);
+}
+
+body.dark .recette-modal {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: none;
+  color: #e5e7eb;
+}
+
+body.dark .recette-modal h3 {
+  color: #e5e7eb;
+}
+
+body.dark .recette-modal-close {
+  color: #e5e7eb;
+}
+
+body.dark .recette-modal button {
+  background: rgba(255,255,255,0.04);
+  color: #e5e7eb;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+

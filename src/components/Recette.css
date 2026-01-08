@@ -1,4 +1,4 @@
-.recette-container {
+﻿.recette-container {
   padding: 20px;
   display: flex;
   justify-content: center;
@@ -16,13 +16,64 @@
   box-sizing: border-box;
 }
 
+/* Style moderne pour tous les boutons retour */
+.back-btn,
+.back-btn,
 .recette-back {
-  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(255, 75, 92, 0.08), rgba(255, 154, 158, 0.08));
+  border: 1px solid rgba(255, 75, 92, 0.2);
+  color: #ff4b5c;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 24px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(255, 75, 92, 0.1);
+}
+
+.back-btn:hover,
+.recette-back:hover {
+  background: linear-gradient(135deg, rgba(255, 75, 92, 0.15), rgba(255, 154, 158, 0.15));
+  border-color: rgba(255, 75, 92, 0.4);
+  transform: translateX(-4px);
+  box-shadow: 0 4px 12px rgba(255, 75, 92, 0.2);
+}
+
+.back-btn:active,
+.recette-back:active {
+  transform: translateX(-2px) scale(0.98);
+}
+
+.recette-author-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
   border: none;
-  color: #333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  margin-bottom: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.recette-author-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.recette-author-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 
 .recette-title {
@@ -69,4 +120,129 @@
   .recette-img {
     max-height: 260px;
   }
+}
+
+/* Dark mode overrides */
+body.dark .recette-container {
+  background: linear-gradient(135deg, #0f172a, #020617);
+}
+
+body.dark .recette-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: none;
+  color: #e5e7eb;
+}
+
+body.dark /* Style moderne pour tous les boutons retour */
+.back-btn,
+.back-btn,
+.recette-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(255, 75, 92, 0.08), rgba(255, 154, 158, 0.08));
+  border: 1px solid rgba(255, 75, 92, 0.2);
+  color: #ff4b5c;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 24px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(255, 75, 92, 0.1);
+}
+
+.back-btn:hover,
+.recette-back:hover {
+  background: linear-gradient(135deg, rgba(255, 75, 92, 0.15), rgba(255, 154, 158, 0.15));
+  border-color: rgba(255, 75, 92, 0.4);
+  transform: translateX(-4px);
+  box-shadow: 0 4px 12px rgba(255, 75, 92, 0.2);
+}
+
+.back-btn:active,
+.recette-back:active {
+  transform: translateX(-2px) scale(0.98);
+}
+
+body.dark .recette-title {
+  color: #ff9a9e;
+}
+
+body.dark .recette-section h3 {
+  color: #e5e7eb;
+}
+
+body.dark .recette-ingredients li,
+body.dark .recette-instructions li {
+  color: #e5e7eb;
+}
+
+body.dark .recette-img {
+  filter: brightness(0.9) contrast(1.05);
+}
+
+body.dark .recette-author-btn {
+  background: linear-gradient(135deg, #818cf8, #a78bfa);
+  box-shadow: 0 4px 12px rgba(129, 140, 248, 0.4);
+}
+
+body.dark .recette-author-btn:hover {
+  box-shadow: 0 6px 16px rgba(129, 140, 248, 0.5);
+}
+
+body.dark   .recette-back,
+  .back-btn,
+.recette-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(255, 75, 92, 0.08), rgba(255, 154, 158, 0.08));
+  border: 1px solid rgba(255, 75, 92, 0.2);
+  color: #ff4b5c;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 24px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(255, 75, 92, 0.1);
+}
+
+.back-btn:hover,
+.recette-back:hover {
+  background: linear-gradient(135deg, rgba(255, 75, 92, 0.15), rgba(255, 154, 158, 0.15));
+  border-color: rgba(255, 75, 92, 0.4);
+  transform: translateX(-4px);
+  box-shadow: 0 4px 12px rgba(255, 75, 92, 0.2);
+}
+
+.back-btn:active,
+.recette-back:active {
+  transform: translateX(-2px) scale(0.98);
+}
+
+  .recette-back:hover,
+  .recette-back:hover {
+    background: linear-gradient(135deg, rgba(255, 107, 122, 0.2), rgba(255, 154, 158, 0.2));
+    border-color: rgba(255, 107, 122, 0.5);
+    box-shadow: 0 4px 12px rgba(255, 107, 122, 0.25);
+  }
+
+/* Dark mode */
+body.dark .back-btn,
+body.dark .recette-back {
+  background: linear-gradient(135deg, rgba(255, 107, 122, 0.12), rgba(255, 154, 158, 0.12));
+  border-color: rgba(255, 107, 122, 0.3);
+  color: #ff6b7a;
+}
+
+body.dark .back-btn:hover,
+body.dark .recette-back:hover {
+  background: linear-gradient(135deg, rgba(255, 107, 122, 0.2), rgba(255, 154, 158, 0.2));
+  border-color: rgba(255, 107, 122, 0.5);
+  box-shadow: 0 4px 12px rgba(255, 107, 122, 0.25);
 }
