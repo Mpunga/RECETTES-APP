@@ -81,7 +81,8 @@
 	flex-direction: column;
 	gap: 8px;
 	min-height: 180px;
-	height: 100%; /* occupe toute la hauteur de la cellule de grille */
+	width: 100%;
+	box-sizing: border-box;
 }
 
 .recipe-card .card-img {

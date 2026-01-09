@@ -172,7 +172,10 @@ export default function ShoppingList() {
 
   return (
     <div className="shopping-list-container">
-      <button className="back-btn" onClick={() => navigate(-1)}>← Retour</button>
+      <button className="back-btn" onClick={() => navigate('/')} title="Retour au menu principal">
+        <span className="material-icons" style={{fontSize:'18px',marginRight:'4px',verticalAlign:'middle'}}>home</span>
+        Accueil
+      </button>
       <div className="shopping-list-header">
         <h1>🛒 Ma liste de courses</h1>
         <p className="shopping-list-subtitle">
@@ -191,10 +194,12 @@ export default function ShoppingList() {
         <>
           <div className="shopping-list-actions">
             <button className="btn-export" onClick={handleExportPDF}>
-              📥 Exporter en PDF
+              <span className="material-icons" style={{fontSize:'18px',marginRight:'4px',verticalAlign:'middle'}}>download</span>
+              Exporter en PDF
             </button>
             <button className="btn-whatsapp" onClick={handleShareWhatsApp}>
-              💬 Partager sur WhatsApp
+              <span className="material-icons" style={{fontSize:'18px',marginRight:'4px',verticalAlign:'middle'}}>share</span>
+              Partager sur WhatsApp
             </button>
             <button className="btn-clear" onClick={handleClearList}>
               🗑️ Vider la liste

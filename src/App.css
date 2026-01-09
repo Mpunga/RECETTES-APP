@@ -4,6 +4,20 @@
   font-family: var(--font-base);
 }
 
+/* Material Icons global styles */
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
+
 body {
   margin: 0;
   background: linear-gradient(135deg, #ff9a9e, #fad0c4);
@@ -67,7 +81,7 @@ body {
 
 /* APP */
 .box {
-  max-width: 1100px;
+  max-width: 900px;
   margin: auto;
   padding: 20px;
 }
@@ -75,7 +89,7 @@ body {
 /* HEADER */
 .header {
   background: white;
-  padding: 20px 25px;
+  padding: 12px 18px;
   border-radius: 12px;
   margin-bottom: 20px;
   display: flex;
@@ -86,8 +100,8 @@ body {
 
 .header h1.brand {
   margin: 0;
-  font-size: 30px;
-  letter-spacing: 0.6px;
+  font-size: 22px;
+  letter-spacing: 0.4px;
   background: linear-gradient(135deg, #ff4b5c, #ff9a9e);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -100,9 +114,19 @@ body {
 /* CARDS */
 .cards {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* deux cartes par ligne */
+  grid-template-columns: 1fr 1fr; /* exactement deux cartes par ligne */
   gap: 20px;
-  align-items: start; /* aligne les cartes en haut de chaque ligne */
+  align-items: stretch;
+  max-width: 100%;
+  width: 100%;
+}
+
+/* Force toujours 2 colonnes sur grands écrans */
+@media (min-width: 861px) {
+  .cards {
+    grid-template-columns: 1fr 1fr !important;
+    grid-auto-rows: 1fr;
+  }
 }
 
 .search-panel {
@@ -497,13 +521,20 @@ body, .card, .header, .auth-card, .recette-card {
 .user-info button {
   background: linear-gradient(135deg, #ff4b5c, #ff9a9e);
   border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
+  padding: 6px 12px;
+  border-radius: 18px;
   color: white;
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
   transition: 0.3s;
   box-shadow: 0 4px 10px rgba(255,75,92,0.4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-info button .material-icons {
+  font-size: 20px;
 }
 
 .user-info button:hover {

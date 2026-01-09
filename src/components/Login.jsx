@@ -66,6 +66,16 @@ class Login extends Component {
     return (
       <div className="auth-page">
         <div className="auth-card">
+          <button 
+            type="button" 
+            className="back-btn" 
+            onClick={() => this.props.navigate('/')} 
+            title="Retour au menu principal"
+            style={{marginBottom:'16px'}}
+          >
+            <span className="material-icons" style={{fontSize:'18px',marginRight:'4px',verticalAlign:'middle'}}>home</span>
+            Accueil
+          </button>
           <h2>Connexion</h2>
 
           <form onSubmit={this.login}>

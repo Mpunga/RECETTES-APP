@@ -163,7 +163,10 @@ export default function Admin() {
 
   return (
     <div className="admin-dashboard">
-      <button className="back-btn" onClick={() => navigate(-1)}>← Retour</button>
+      <button className="back-btn" onClick={() => navigate('/')} title="Retour au menu principal">
+        <span className="material-icons" style={{fontSize:'18px',marginRight:'4px',verticalAlign:'middle'}}>home</span>
+        Accueil
+      </button>
       
       <div className="admin-header">
         <h1>🛡️ Tableau de bord Admin</h1>

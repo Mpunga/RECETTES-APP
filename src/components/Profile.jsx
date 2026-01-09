@@ -3,6 +3,7 @@ import { auth, database} from "../base";
 import { showToast } from "../toast";
 import { ref as dbRef, get, set, update, onValue, remove, push } from "firebase/database";
 import { useNavigate } from "react-router-dom";
+import { useUserPresence } from "../hooks/usePresence";
 import './Profile.css';
 import './RecetteModal.css';
 import AjouterRecette from '../AjouterRecette';
@@ -89,6 +90,9 @@ export default function Profile() {
   const [feedbackText, setFeedbackText] = useState('');
   const [feedbackEmail, setFeedbackEmail] = useState('');
   const navigate = useNavigate();
+  
+  // Activer la présence pour l'utilisateur actuel
+  useUserPresence();
 
   // Fonctions helper pour obtenir les options de sélection
   const getCapitalesOptions = () => {
@@ -278,7 +282,10 @@ useEffect(() => {
 
   return (
     <div className="profile">
-      <button className="back-btn" onClick={() => navigate(-1)}> Retour</button>
+      <button className="back-btn" onClick={() => navigate('/')} title="Retour au menu principal">
+        <span className="material-icons" style={{fontSize:'18px',marginRight:'4px',verticalAlign:'middle'}}>home</span>
+        Accueil
+      </button>
 
       <div className="profile-card">
         <div className="profile-photo">
@@ -318,7 +325,7 @@ useEffect(() => {
                     });
                   }}
                 >
-                  <option value="">🌍 Sélectionnez</option>
+                  <option value=""><span className="material-icons">public</span> Sélectionnez</option>
                   {Object.keys(PAYS_CAPITALES).sort().map(p => (
                     <option key={p} value={p}>{p}</option>
                   ))}
@@ -333,7 +340,7 @@ useEffect(() => {
                     value={form.capital || ""} 
                     onChange={handleChange}
                   >
-                    <option value="">🏙️ Sélectionnez</option>
+                    <option value=""><span className="material-icons">location_city</span> Sélectionnez</option>
                     {getCapitalesOptions().map(ville => (
                       <option key={ville} value={ville}>{ville}</option>
                     ))}
@@ -349,7 +356,7 @@ useEffect(() => {
                     value={form.province || ""} 
                     onChange={handleChange}
                   >
-                    <option value="">📍 Facultatif</option>
+                    <option value=""><span className="material-icons">place</span> Facultatif</option>
                     {getProvincesOptions().map(prov => (
                       <option key={prov} value={prov}>{prov}</option>
                     ))}
@@ -390,13 +397,17 @@ useEffect(() => {
                     className="admin-button" 
                     onClick={() => navigate('/admin')}
                   >
-                    🛡️ Accéder au Dashboard Admin
+                    <span className="material-icons" style={{fontSize:'18px',marginRight:'4px',verticalAlign:'middle'}}>admin_panel_settings</span>
+                    Accéder au Dashboard Admin
                   </button>
                 </div>
               )}
 
               <div style={{marginTop:16}}>
-                <button className="primary" onClick={() => setShowRecetteModal(true)}> Gérer mes recettes</button>
+                <button className="primary" onClick={() => setShowRecetteModal(true)}>
+                  <span className="material-icons" style={{fontSize:'18px',marginRight:'4px',verticalAlign:'middle'}}>restaurant_menu</span>
+                  Gérer mes recettes
+                </button>
               </div>
 
               <div className="feedback-section">

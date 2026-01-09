@@ -49,6 +49,12 @@
         ".read": "auth != null",
         ".write": "auth != null && auth.uid == $followerId"
       }
+    },
+    "privateChats": {
+      "$chatId": {
+        ".read": "auth != null && (root.child('privateChats').child($chatId).child('participants').child(auth.uid).exists())",
+        ".write": "auth != null && (root.child('privateChats').child($chatId).child('participants').child(auth.uid).exists() || !root.child('privateChats').child($chatId).exists())"
+      }
     }
   }
 }

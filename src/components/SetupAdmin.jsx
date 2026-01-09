@@ -68,8 +68,20 @@ export default function SetupAdmin() {
 
   return (
     <div className="setup-admin-container">
+      <button 
+        className="back-btn" 
+        onClick={() => window.location.href = '/'} 
+        title="Retour au menu principal"
+        style={{marginBottom:'16px'}}
+      >
+        <span className="material-icons" style={{fontSize:'18px',marginRight:'4px',verticalAlign:'middle'}}>home</span>
+        Accueil
+      </button>
       <div className="setup-admin-card">
-        <h1>🛡️ Configuration Administrateur</h1>
+        <h1>
+          <span className="material-icons" style={{fontSize:'32px',marginRight:'8px',verticalAlign:'middle'}}>admin_panel_settings</span>
+          Configuration Administrateur
+        </h1>
         <p className="setup-subtitle">Définir le premier administrateur de la plateforme</p>
 
         <div className="setup-section">
@@ -78,7 +90,8 @@ export default function SetupAdmin() {
             className="btn-current-user"
             onClick={getCurrentUserUid}
           >
-            📋 Utiliser mon UID (utilisateur connecté)
+            <span className="material-icons" style={{fontSize:'18px',marginRight:'4px',verticalAlign:'middle'}}>person</span>
+            Utiliser mon UID (utilisateur connecté)
           </button>
         </div>
 
@@ -99,7 +112,8 @@ export default function SetupAdmin() {
               disabled={loading}
               className="btn-search"
             >
-              🔍 Rechercher
+              <span className="material-icons" style={{fontSize:'18px',marginRight:'4px',verticalAlign:'middle'}}>search</span>
+              Rechercher
             </button>
           </div>
         </div>
@@ -119,7 +133,11 @@ export default function SetupAdmin() {
                 <p className="user-uid">UID: {userInfo.uid}</p>
                 {userInfo.role && (
                   <span className={`role-badge ${userInfo.role}`}>
-                    {userInfo.role === 'admin' ? '🛡️ Déjà Admin' : '👤 Utilisateur'}
+                    {userInfo.role === 'admin' ? (
+                      <><span className="material-icons" style={{fontSize:'14px',marginRight:'4px',verticalAlign:'middle'}}>admin_panel_settings</span>Déjà Admin</>
+                    ) : (
+                      <><span className="material-icons" style={{fontSize:'14px',marginRight:'4px',verticalAlign:'middle'}}>person</span>Utilisateur</>
+                    )}
                   </span>
                 )}
               </div>
@@ -131,13 +149,17 @@ export default function SetupAdmin() {
                 disabled={loading}
                 className="btn-promote"
               >
-                ⬆️ Promouvoir en Administrateur
+                <span className="material-icons" style={{fontSize:'18px',marginRight:'4px',verticalAlign:'middle'}}>upgrade</span>
+                Promouvoir en Administrateur
               </button>
             )}
 
             {userInfo.role === 'admin' && (
               <div className="success-message">
-                <p>✅ Cet utilisateur est déjà administrateur !</p>
+                <p>
+                  <span className="material-icons" style={{fontSize:'18px',marginRight:'4px',verticalAlign:'middle',color:'#10b981'}}>check_circle</span>
+                  Cet utilisateur est déjà administrateur !
+                </p>
                 <a href="/admin" className="btn-go-admin">
                   🛡️ Accéder au Dashboard Admin
                 </a>

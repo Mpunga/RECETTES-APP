@@ -1,0 +1,7 @@
+# Force UTF-8 encoding
+AddDefaultCharset UTF-8
+AddCharset UTF-8 .html .css .js .xml .json .rss .atom
+
+<IfModule mod_headers.c>
+    Header set Content-Type "text/html; charset=utf-8"
+</IfModule>

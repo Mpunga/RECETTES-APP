@@ -1,0 +1,92 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid === $uid",
+        "presence": {
+          ".read": "auth != null",
+          ".write": "auth != null && auth.uid === $uid"
+        },
+        "following": {
+          ".read": "auth != null",
+          "$targetUid": {
+            ".write": "auth != null && auth.uid === $uid"
+          }
+        },
+        "followers": {
+          ".read": "auth != null",
+          "$followerUid": {
+            ".write": "auth != null && auth.uid === $followerUid"
+          }
+        }
+      }
+    },
+
+    "recettes": {
+      ".read": "true",
+      "$recetteId": {
+        ".write": "auth != null"
+      }
+    },
+
+    "shoppingList": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+
+    "feedback": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+
+    "preferences": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+
+    "reactions": {
+      ".read": "true",
+      "$recetteId": {
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid"
+        }
+      }
+    },
+
+    "comments": {
+      ".read": "true",
+      "$recetteId": {
+        "$commentId": {
+          ".write": "auth != null"
+        }
+      }
+    },
+
+    "follows": {
+      "$followerId": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid === $followerId"
+      }
+    },
+
+    "privateChats": {
+      ".read": "auth != null",
+      "$chatId": {
+        ".write": "auth != null && (data.child('participants').child(auth.uid).exists() || !data.exists())",
+        "participants": {
+          ".validate": "data.hasChildren()"
+        },
+        "messages": {
+          "$messageId": {
+            ".validate": "newData.hasChildren(['text', 'senderId', 'timestamp'])"
+          }
+        }
+      }
+    }
+  }
+}

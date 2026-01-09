@@ -92,7 +92,10 @@ export default function Comments({ recetteId, ingredients }) {
 
   return (
     <div className="comments-section">
-      <h3>💬 Commentaires ({comments.length})</h3>
+      <h3>
+        <span className="material-icons" style={{fontSize:'20px',marginRight:'8px',verticalAlign:'middle'}}>comment</span>
+        Commentaires ({comments.length})
+      </h3>
 
       {currentUser && (
         <form onSubmit={handleSubmit} className="comment-form">

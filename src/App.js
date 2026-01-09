@@ -1,14 +1,21 @@
 import { Component } from "react";
 import "./App.css";
 import Header from "./components/Header";
-import { ref, onValue, set } from "firebase/database";
+import { ref, onValue} from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 import { database, auth } from "./base";
 import Card from "./components/Card";
 import RecommendedRecipes from "./components/RecommendedRecipes";
+import { useUserPresence } from "./hooks/usePresence";
 
 
 // Login component routed separately
+
+// Composant wrapper pour gérer la présence
+function AppWithPresence() {
+  useUserPresence();
+  return <App />;
+}
 
 class App extends Component {
 
@@ -17,7 +24,7 @@ class App extends Component {
     user: null,
     loading: true,
     page: 1,
-    perPage: 6,
+    perPage: 4,
     search: '',
     users: {},
     searchMode: 'nom'
@@ -72,11 +79,6 @@ class App extends Component {
     });
   };
 
-      // ➕ Ajouter une recette dans Firebase
-  ajouterRecette = recette => {
-  const key = `recette-${Date.now()}`;
-  set(ref(database, "recettes/" + key), recette);
-};
 
   render() {
     const { recettes, user, loading, search, users, searchMode } = this.state;
@@ -164,4 +166,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default AppWithPresence;

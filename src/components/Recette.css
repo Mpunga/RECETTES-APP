@@ -60,11 +60,58 @@
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .recette-author-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.author-presence {
+  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  margin-left: 4px;
+}
+
+.author-presence.online {
+  animation: pulse-presence 2s infinite;
+}
+
+@keyframes pulse-presence {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(0, 255, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 6px rgba(0, 255, 0, 0.8);
+  }
+}
+
+.recette-contact-btn {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(17, 153, 142, 0.3);
+}
+
+.recette-contact-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(17, 153, 142, 0.4);
 }
 
 .recette-author-row {

@@ -70,7 +70,10 @@ export default function PublicProfile() {
 
   return (
     <div className="public-profile-container">
-      <button className="back-btn" onClick={() => navigate(-1)}>â¬… Retour</button>
+      <button className="back-btn" onClick={() => navigate('/')} title="Retour au menu principal">
+        <span className="material-icons" style={{fontSize:'18px',marginRight:'4px',verticalAlign:'middle'}}>home</span>
+        Accueil
+      </button>
       
       <div className="public-profile-card">
         <div className="profile-header-section">
@@ -82,7 +85,8 @@ export default function PublicProfile() {
             </div>
             {profile.pays && (
               <p className="profile-location">
-                📍 {profile.pays}
+                <span className="material-icons" style={{fontSize:'16px',marginRight:'4px',verticalAlign:'middle'}}>place</span>
+                {profile.pays}
                 {profile.province && ` • ${profile.province}`}
               </p>
             )}
@@ -141,7 +145,10 @@ export default function PublicProfile() {
       </div>
 
       <div className="recipes-section">
-        <h2>ðŸ² Recettes publiÃ©es ({recettes.length})</h2>
+        <h2>
+          <span className="material-icons" style={{fontSize:'24px',marginRight:'8px',verticalAlign:'middle'}}>restaurant</span>
+          Recettes publiées ({recettes.length})
+        </h2>
         {recettes.length > 0 ? (
           <>
             <div className="recipes-grid">
@@ -160,7 +167,7 @@ export default function PublicProfile() {
             )}
           </>
         ) : (
-          <p className="no-recipes">Aucune recette publiÃ©e pour l'instant.</p>
+          <p className="no-recipes">Aucune recette publiée pour l'instant.</p>
         )}
       </div>
     </div>

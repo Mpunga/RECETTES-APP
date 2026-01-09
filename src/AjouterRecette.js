@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./AjouterRecette.css";
 import { auth, database } from "./base";
-import { ref as dbRef, set } from "firebase/database";
+import { ref as dbRef, set, get } from "firebase/database";
 import { showToast } from "./toast";
 
 export default class AjouterRecette extends Component {
@@ -59,6 +59,7 @@ export default class AjouterRecette extends Component {
     if (!user) return showToast('Vous devez être connecté pour ajouter une recette.', { type: 'error', duration: 4000 });
 
     try {
+      // Pour une modification, pas besoin de vérifier les doublons
       if (this.props.recipeId) {
         const recette = {
           id: this.props.recipeId,
@@ -72,6 +73,22 @@ export default class AjouterRecette extends Component {
         await set(dbRef(database, `recettes/${this.props.recipeId}`), recette);
         showToast('Recette mise à jour ✅', { type: 'success' });
       } else {
+        // Vérifier les doublons avant d'ajouter une nouvelle recette
+        const recettesSnapshot = await get(dbRef(database, 'recettes'));
+        const recettesData = recettesSnapshot.val() || {};
+        
+        const isDuplicate = Object.values(recettesData).some(r => {
+          const sameNom = (r.nom || '').trim().toLowerCase() === (this.state.nom || '').trim().toLowerCase();
+          const sameIngredients = (r.ingredients || '').trim().toLowerCase() === (this.state.ingredients || '').trim().toLowerCase();
+          const sameInstructions = (r.instructions || '').trim().toLowerCase() === (this.state.instructions || '').trim().toLowerCase();
+          return sameNom && sameIngredients && sameInstructions;
+        });
+
+        if (isDuplicate) {
+          showToast('Cette recette existe déjà ❌', { type: 'error', duration: 4000 });
+          return;
+        }
+
         const key = `recette-${Date.now()}`;
         const recette = {
           id: key,
@@ -97,6 +114,16 @@ export default class AjouterRecette extends Component {
   render() {
     return (
       <form className="ajouter-recette" onSubmit={this.handleSubmit}>
+        <button 
+          type="button" 
+          className="back-btn" 
+          onClick={() => this.props.navigate('/')} 
+          title="Retour au menu principal"
+          style={{marginBottom:'16px'}}
+        >
+          <span className="material-icons" style={{fontSize:'18px',marginRight:'4px',verticalAlign:'middle'}}>home</span>
+          Accueil
+        </button>
         <input
           name="nom"
           onChange={this.handleChange}

@@ -182,6 +182,16 @@ export default function Signup() {
   return (
     <div className="auth-page">
       <div className="auth-card">
+        <button 
+          type="button" 
+          className="back-btn" 
+          onClick={() => navigate('/')} 
+          title="Retour au menu principal"
+          style={{marginBottom:'16px'}}
+        >
+          <span className="material-icons" style={{fontSize:'18px',marginRight:'4px',verticalAlign:'middle'}}>home</span>
+          Accueil
+        </button>
         <h2>Créer un compte</h2>
 
         <form onSubmit={handleSubmit}>
@@ -213,7 +223,7 @@ export default function Signup() {
             required
             className="full"
           >
-            <option value="">🌍 Sélectionnez votre pays</option>
+            <option value="">Sélectionnez votre pays</option>
             {Object.keys(PAYS_CAPITALES).sort().map(pays => (
               <option key={pays} value={pays}>{pays}</option>
             ))}
@@ -228,7 +238,7 @@ export default function Signup() {
               required
               className="full"
             >
-              <option value="">🏙️ Sélectionnez votre ville</option>
+              <option value="">Sélectionnez votre ville</option>
               {getCapitalesOptions().map(ville => (
                 <option key={ville} value={ville}>{ville}</option>
               ))}
@@ -243,7 +253,7 @@ export default function Signup() {
               onChange={handleChange}
               className="full"
             >
-              <option value="">📍 Province / Région (facultatif)</option>
+              <option value="">Province / Région (facultatif)</option>
               {getProvincesOptions().map(prov => (
                 <option key={prov} value={prov}>{prov}</option>
               ))}

@@ -88,22 +88,35 @@ const Header = ({ user, pseudo }) => {
 
       <h1 className="brand" aria-label="E~Food">E~Food</h1>
 
-      <div className="user-info">
+      <div className="user-info" style={{display:'flex',gap:'6px',alignItems:'center'}}>
         {user ? (
           <>
-                        <button onClick={() => navigate('/courses')}>🛒 Liste de courses</button>
-            <button onClick={() => navigate('/profile')}>👤 Mon profil</button>
+            <button onClick={() => navigate('/courses')} title="Liste de courses">
+              <span className="material-icons">shopping_cart</span>
+            </button>
+            <button onClick={() => navigate('/messages')} title="Messages">
+              <span className="material-icons">chat</span>
+            </button>
+            <button onClick={() => navigate('/profile')} title="Mon profil">
+              <span className="material-icons">account_circle</span>
+            </button>
             {showGreeting && (
-              <span className="greeting" style={{margin:'0 8px',fontWeight:600,color:'#2c7'}}>
+              <span className="greeting" style={{margin:'0 4px',fontWeight:600,fontSize:'13px',color:'#2c7'}}>
                 Bonjour, {name}!
               </span>
             )}
-            <button onClick={handleLogout}>Déconnexion</button>
+            <button onClick={handleLogout} title="Déconnexion">
+              <span className="material-icons">logout</span>
+            </button>
           </>
         ) : (
           <>
-            <button onClick={() => navigate('/signup')}>Créer un compte</button>
-            <button onClick={() => navigate('/login')}>Se connecter</button>
+            <button onClick={() => navigate('/signup')} title="Créer un compte">
+              <span className="material-icons">person_add</span>
+            </button>
+            <button onClick={() => navigate('/login')} title="Se connecter">
+              <span className="material-icons">login</span>
+            </button>
           </>
         )}
       </div>
