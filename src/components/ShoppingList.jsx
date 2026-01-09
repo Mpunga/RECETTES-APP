@@ -115,7 +115,7 @@ export default function ShoppingList() {
         <body>
           <h1>🛒 Ma liste de courses</h1>
           ${recipesHtml}
-          <div class="footer">Généré par E~Food</div>
+          <div class="footer">Généré par Bileyi</div>
           <script>window.onload = () => { window.print(); };</script>
         </body>
       </html>`;
@@ -148,7 +148,7 @@ export default function ShoppingList() {
       })
       .join('%0A%0A----%0A%0A');
 
-    const message = `📋 *Ma liste de courses*%0A%0A${recipes}%0A%0AGénéré par E~Food 🍽️`;
+    const message = `📋 *Ma liste de courses*%0A%0A${recipes}%0A%0AGénéré par Bileyi 🍽️`;
     const whatsappUrl = `https://wa.me/?text=${message}`;
 
     window.open(whatsappUrl, '_blank');

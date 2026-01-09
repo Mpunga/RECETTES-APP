@@ -13,7 +13,7 @@ export default function Connexion() {
   return (
     <div className="connexionBox">
       <form className="connexion" onSubmit={goToApp}>
-        <h1>Ma Boîte à Recettes</h1>
+        <h1>Bileyi</h1>
 
         <input
           type="text"

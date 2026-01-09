@@ -170,7 +170,7 @@ export default function Admin() {
       
       <div className="admin-header">
         <h1>🛡️ Tableau de bord Admin</h1>
-        <p className="admin-subtitle">Gestion de la plateforme E~Food</p>
+        <p className="admin-subtitle">Gestion de la plateforme Bileyi</p>
       </div>
 
       <div className="admin-stats">

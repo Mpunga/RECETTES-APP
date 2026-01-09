@@ -1,5 +1,6 @@
 import React from 'react';
 import './Footer.css';
+import logo from '../assets/logo_e_kolamba.png';
 
 export default function Footer() {
   return (
@@ -7,8 +8,8 @@ export default function Footer() {
       <div className="footer-content">
         <div className="footer-brand">
           <div className="footer-logo">
-            <span className="logo-icon">🍽️</span>
-            <span className="logo-text">Recettes App</span>
+            <img src={logo} alt="Bileyi" className="logo-icon" style={{height: '32px', width: '32px', objectFit: 'contain'}} />
+            <span className="logo-text">Bileyi</span>
           </div>
           <p className="footer-tagline">
             Partagez vos meilleures recettes avec le monde
@@ -68,7 +69,7 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <p>&copy; {new Date().getFullYear()} Recettes App. Tous droits réservés.</p>
+        <p>&copy; {new Date().getFullYear()} Bileyi. Tous droits réservés.</p>
         <p className="footer-made-with">
           Fait avec <span className="heart">❤️</span> pour les passionnés de cuisine
         </p>

@@ -2,6 +2,7 @@
 import { ref, get } from "firebase/database"
 import { auth, database } from "../base"
 import { useEffect, useState } from "react";
+import logo from '../assets/logo_e_kolamba.png';
 
 
 
@@ -73,6 +74,7 @@ const Header = ({ user, pseudo }) => {
   return (
     <header className="header">
       <div style={{display:'flex',alignItems:'center',gap:8}}>
+        <img src={logo} alt="Bileyi" style={{height: '40px', objectFit: 'contain'}} />
         <button
           className={"dark-toggle" + (darkMode ? ' active' : '')}
           onClick={toggleDark}
@@ -86,7 +88,7 @@ const Header = ({ user, pseudo }) => {
         </span>
       </div>
 
-      <h1 className="brand" aria-label="E~Food">E~Food</h1>
+      <h1 className="brand" aria-label="Bileyi">Bileyi</h1>
 
       <div className="user-info" style={{display:'flex',gap:'6px',alignItems:'center'}}>
         {user ? (
