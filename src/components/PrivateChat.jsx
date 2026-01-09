@@ -12,8 +12,10 @@ export default function PrivateChat({ recipientId, recipientName, recipeId, reci
   const [contextMenu, setContextMenu] = useState(null); // { messageId, x, y }
   const [editingMessage, setEditingMessage] = useState(null); // { id, text }
   const [replyingTo, setReplyingTo] = useState(null); // { id, text, senderName }
+  const [selectedImage, setSelectedImage] = useState(null); // Image à envoyer (base64)
   const messagesEndRef = useRef(null);
   const longPressTimer = useRef(null);
+  const fileInputRef = useRef(null);
   const currentUser = auth.currentUser;
 
   // Créer un ID de chat unique (tri alphabétique des UIDs)
@@ -187,9 +189,87 @@ export default function PrivateChat({ recipientId, recipientName, recipeId, reci
     setContextMenu(null);
   };
 
+  // Télécharger l'image
+  const handleDownloadImage = (imageUrl, msgId) => {
+    try {
+      const link = document.createElement('a');
+      link.href = imageUrl;
+      link.download = `image_${msgId}_${Date.now()}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('Image téléchargée', { type: 'success' });
+      setContextMenu(null);
+    } catch (error) {
+      console.error('Erreur téléchargement:', error);
+      showToast('Erreur lors du téléchargement', { type: 'error' });
+    }
+  };
+
+  // Compresser l'image et convertir en base64
+  const compressImage = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          // Limiter la taille maximale
+          let width = img.width;
+          let height = img.height;
+          const maxSize = 800; // Réduit pour base64
+          
+          if (width > height && width > maxSize) {
+            height = (height * maxSize) / width;
+            width = maxSize;
+          } else if (height > maxSize) {
+            width = (width * maxSize) / height;
+            height = maxSize;
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Convertir en base64 avec compression
+          const base64 = canvas.toDataURL('image/jpeg', 0.6); // Qualité 60%
+          resolve(base64);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Gérer la sélection d'image
+  const handleImageSelect = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB max avant compression
+        showToast('Image trop volumineuse (max 5MB)', { type: 'error' });
+        return;
+      }
+      
+      showToast('Compression de l\'image...', { type: 'info' });
+      // Compresser et convertir en base64
+      const base64Image = await compressImage(file);
+      setSelectedImage({ base64: base64Image, name: file.name });
+    }
+  };
+
+  // Annuler l'image sélectionnée
+  const handleCancelImage = () => {
+    setSelectedImage(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() && !selectedImage) return;
 
     const senderName = currentUserData && currentUserData.prenom && currentUserData.nom
       ? `${currentUserData.prenom} ${currentUserData.nom}`
@@ -199,22 +279,33 @@ export default function PrivateChat({ recipientId, recipientName, recipeId, reci
       if (editingMessage) {
         // Modifier le message existant
         const messageRef = ref(database, `privateChats/${chatId}/messages/${editingMessage.id}`);
-        await update(messageRef, {
+        const updateData = {
           text: newMessage.trim(),
           edited: true,
           editedAt: Date.now()
-        });
+        };
+        if (selectedImage) {
+          updateData.imageUrl = selectedImage.base64;
+        }
+        await update(messageRef, updateData);
         showToast('Message modifié', { type: 'success' });
         setEditingMessage(null);
       } else {
         // Envoyer un nouveau message
         const messagesRef = ref(database, `privateChats/${chatId}/messages`);
         const messageData = {
-          text: newMessage.trim(),
           senderId: currentUser.uid,
           senderName: senderName,
           timestamp: Date.now()
         };
+
+        if (newMessage.trim()) {
+          messageData.text = newMessage.trim();
+        }
+
+        if (selectedImage) {
+          messageData.imageUrl = selectedImage.base64;
+        }
 
         // Ajouter les infos de réponse si applicable
         if (replyingTo) {
@@ -230,6 +321,7 @@ export default function PrivateChat({ recipientId, recipientName, recipeId, reci
       }
       
       setNewMessage('');
+      handleCancelImage();
     } catch (error) {
       console.error('Erreur envoi message:', error);
       showToast('Erreur lors de l\'envoi du message', { type: 'error' });
@@ -294,7 +386,24 @@ export default function PrivateChat({ recipientId, recipientName, recipeId, reci
                       </div>
                     )}
 
-                    <p>{msg.text}</p>
+                    {msg.text && <p>{msg.text}</p>}
+                    
+                    {/* Afficher l'image si présente */}
+                    {msg.imageUrl && (
+                      <div className="message-image">
+                        <img src={msg.imageUrl} alt="Partage" onClick={() => window.open(msg.imageUrl, '_blank')} />
+                        <button 
+                          className="image-download-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDownloadImage(msg.imageUrl, msg.id);
+                          }}
+                          title="Télécharger l'image"
+                        >
+                          <span className="material-icons">download</span>
+                        </button>
+                      </div>
+                    )}
                     
                     <span className="message-time">
                       ⏰ {new Date(msg.timestamp).toLocaleString('fr-FR', {
@@ -329,10 +438,18 @@ export default function PrivateChat({ recipientId, recipientName, recipeId, reci
               <span className="material-icons">reply</span>
               Répondre
             </button>
-            <button onClick={() => handleCopyMessage(contextMenu.message.text)}>
-              <span className="material-icons">content_copy</span>
-              Copier
-            </button>
+            {contextMenu.message.text && (
+              <button onClick={() => handleCopyMessage(contextMenu.message.text)}>
+                <span className="material-icons">content_copy</span>
+                Copier le texte
+              </button>
+            )}
+            {contextMenu.message.imageUrl && (
+              <button onClick={() => handleDownloadImage(contextMenu.message.imageUrl, contextMenu.messageId)}>
+                <span className="material-icons">download</span>
+                Télécharger l'image
+              </button>
+            )}
             {contextMenu.message.senderId === currentUser.uid && (
               <>
                 <button onClick={() => handleEditMessage(contextMenu.message)}>
@@ -369,7 +486,35 @@ export default function PrivateChat({ recipientId, recipientName, recipeId, reci
             </div>
           )}
           
+          {/* Aperçu de l'image sélectionnée */}
+          {selectedImage && (
+            <div className="image-preview-bar">
+              <img src={selectedImage.base64} alt="Aperçu" className="image-preview-thumb" />
+              <div className="image-preview-info">
+                <span className="image-preview-name">{selectedImage.name}</span>
+              </div>
+              <button className="image-preview-close" onClick={handleCancelImage} type="button">
+                <span className="material-icons">close</span>
+              </button>
+            </div>
+          )}
+          
           <div className="chat-input-row">
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              onChange={handleImageSelect}
+              style={{ display: 'none' }}
+            />
+            <button 
+              type="button" 
+              className="chat-image-btn" 
+              onClick={() => fileInputRef.current?.click()}
+              title="Ajouter une image"
+            >
+              <span className="material-icons">image</span>
+            </button>
             <input
               type="text"
               value={newMessage}
@@ -390,7 +535,7 @@ export default function PrivateChat({ recipientId, recipientName, recipeId, reci
                 Annuler
               </button>
             )}
-            <button type="submit" className="chat-send-btn" disabled={!newMessage.trim()}>
+            <button type="submit" className="chat-send-btn" disabled={!newMessage.trim() && !selectedImage}>
               {editingMessage ? '✏️ Modifier' : '✉️ Envoyer'}
             </button>
           </div>

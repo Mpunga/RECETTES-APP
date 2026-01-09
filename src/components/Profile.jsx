@@ -89,6 +89,8 @@ export default function Profile() {
   const [photoPreview, setPhotoPreview] = useState(null);
   const [feedbackText, setFeedbackText] = useState('');
   const [feedbackEmail, setFeedbackEmail] = useState('');
+  const [showCamera, setShowCamera] = useState(false);
+  const [stream, setStream] = useState(null);
   const navigate = useNavigate();
   
   // Activer la présence pour l'utilisateur actuel
@@ -188,9 +190,15 @@ useEffect(() => {
     await update(dbRef(database, "users/" + user.uid), form);
     setProfile(form);
     setEditMode(false);
-    setPhotoPreview(null);
     showToast("Profil mis à jour ", { type: 'success' });
   };
+
+  // Réinitialiser photoPreview quand on quitte le mode édition
+  useEffect(() => {
+    if (!editMode) {
+      setPhotoPreview(null);
+    }
+  }, [editMode]);
 
   /* const handlePhotoChange = async e => {
     const user = auth.currentUser;
@@ -220,6 +228,53 @@ useEffect(() => {
 
   reader.readAsDataURL(file);
 };
+
+  // Gérer la capture photo depuis la caméra
+  const startCamera = async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: 'user' } 
+      });
+      setStream(mediaStream);
+      setShowCamera(true);
+      
+      setTimeout(() => {
+        const video = document.getElementById('camera-video-profile');
+        if (video) {
+          video.srcObject = mediaStream;
+        }
+      }, 100);
+    } catch (error) {
+      console.error('Erreur caméra:', error);
+      showToast('❌ Impossible d\'accéder à la caméra', { type: 'error' });
+    }
+  };
+
+  const capturePhoto = () => {
+    const video = document.getElementById('camera-video-profile');
+    const canvas = document.getElementById('camera-canvas-profile');
+    
+    if (video && canvas) {
+      const ctx = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0);
+      
+      const base64 = canvas.toDataURL('image/jpeg', 0.8);
+      setPhotoPreview(base64);
+      setForm(prev => ({ ...prev, photo: base64 }));
+      stopCamera();
+      showToast('✅ Photo capturée', { type: 'success' });
+    }
+  };
+
+  const stopCamera = () => {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      setStream(null);
+    }
+    setShowCamera(false);
+  };
 
   const handleDeleteRecipe = async id => {
     if (!window.confirm('Supprimer cette recette ?')) return;
@@ -297,7 +352,17 @@ useEffect(() => {
             <div className="profile-edit">
               <label className="field">
                 Photo de profil
-                <input type="file" accept="image/*" onChange={handlePhotoChange} />
+                <div style={{display:'flex',gap:'8px',marginTop:'8px',flexWrap:'wrap'}}>
+                  <button type="button" onClick={startCamera} style={{flex:'1',minWidth:'120px',padding:'10px',background:'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',color:'white',border:'none',borderRadius:'8px',cursor:'pointer',fontWeight:'600'}}>
+                    <span className="material-icons" style={{fontSize:'18px',verticalAlign:'middle',marginRight:'4px'}}>photo_camera</span>
+                    Capturer
+                  </button>
+                  <label style={{flex:'1',minWidth:'120px',padding:'10px',background:'#e0e0e0',color:'#333',border:'none',borderRadius:'8px',cursor:'pointer',fontWeight:'600',textAlign:'center',display:'inline-block'}}>
+                    <span className="material-icons" style={{fontSize:'18px',verticalAlign:'middle',marginRight:'4px'}}>photo_library</span>
+                    Galerie
+                    <input type="file" accept="image/*" onChange={handlePhotoChange} style={{display:'none'}} />
+                  </label>
+                </div>
               </label>
 
               <label className="field">
@@ -471,6 +536,26 @@ useEffect(() => {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Modal de caméra */}
+      {showCamera && (
+        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.9)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:9999}}>
+          <div style={{background:'white',borderRadius:'16px',padding:'20px',maxWidth:'600px',width:'90%',textAlign:'center'}}>
+            <h3 style={{marginBottom:'16px'}}>Capture photo</h3>
+            <video id="camera-video-profile" autoPlay playsInline style={{width:'100%',maxWidth:'400px',borderRadius:'12px',marginBottom:'16px'}}></video>
+            <canvas id="camera-canvas-profile" style={{display:'none'}}></canvas>
+            <div style={{display:'flex',gap:'12px',justifyContent:'center'}}>
+              <button type="button" onClick={capturePhoto} style={{padding:'12px 24px',background:'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',color:'white',border:'none',borderRadius:'8px',cursor:'pointer',fontWeight:'600'}}>
+                <span className="material-icons" style={{fontSize:'18px',verticalAlign:'middle',marginRight:'4px'}}>camera</span>
+                Capturer
+              </button>
+              <button type="button" onClick={stopCamera} style={{padding:'12px 24px',background:'#e0e0e0',color:'#333',border:'none',borderRadius:'8px',cursor:'pointer',fontWeight:'600'}}>
+                Annuler
+              </button>
+            </div>
+          </div>
         </div>
       )}
       </div>

@@ -89,6 +89,10 @@ export default function Signup() {
 
   const [photoBase64, setPhotoBase64] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
+  const [stream, setStream] = useState(null);
+  const videoRef = useState(null)[0];
+  const canvasRef = useState(null)[0];
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -116,6 +120,65 @@ export default function Signup() {
   const getProvincesOptions = () => {
     if (!form.pays) return [];
     return PROVINCES_PAR_PAYS[form.pays] || [];
+  };
+
+  // Gérer la capture photo depuis la caméra
+  const startCamera = async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: 'user' } 
+      });
+      setStream(mediaStream);
+      setShowCamera(true);
+      
+      // Attendre que le modal soit rendu
+      setTimeout(() => {
+        const video = document.getElementById('camera-video');
+        if (video) {
+          video.srcObject = mediaStream;
+        }
+      }, 100);
+    } catch (error) {
+      console.error('Erreur caméra:', error);
+      showToast('❌ Impossible d\'accéder à la caméra', { type: 'error' });
+    }
+  };
+
+  const capturePhoto = () => {
+    const video = document.getElementById('camera-video');
+    const canvas = document.getElementById('camera-canvas');
+    
+    if (video && canvas) {
+      const ctx = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0);
+      
+      const base64 = canvas.toDataURL('image/jpeg', 0.8);
+      setPhotoBase64(base64);
+      stopCamera();
+      showToast('✅ Photo capturée', { type: 'success' });
+    }
+  };
+
+  const stopCamera = () => {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      setStream(null);
+    }
+    setShowCamera(false);
+  };
+
+  // Gérer la sélection de fichier
+  const handlePhotoSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setPhotoBase64(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
      
   const handleSubmit = async e => {
@@ -198,19 +261,26 @@ export default function Signup() {
           <input name="nom" placeholder="Nom" onChange={handleChange} required />
           <input name="prenom" placeholder="Prénom" onChange={handleChange} required />
 
-          {/* 📸 Upload photo */}
-          <input
-            type="file"
-            accept="image/*"
-            className="full"
-            onChange={e => {
-              const file = e.target.files[0];
-              if (!file) return;
-              const reader = new FileReader();
-              reader.onload = () => setPhotoBase64(reader.result);
-              reader.readAsDataURL(file);
-            }}
-          />
+          {/* 📸 Photo de profil */}
+          <div className="photo-upload-section" style={{marginBottom:'16px'}}>
+            <label style={{display:'block',marginBottom:'8px',fontWeight:'600'}}>Photo de profil</label>
+            {photoBase64 && (
+              <div style={{marginBottom:'12px',textAlign:'center'}}>
+                <img src={photoBase64} alt="Aperçu" style={{width:'120px',height:'120px',objectFit:'cover',borderRadius:'50%',border:'3px solid #667eea'}} />
+              </div>
+            )}
+            <div style={{display:'flex',gap:'8px',flexWrap:'wrap'}}>
+              <button type="button" onClick={startCamera} style={{flex:'1',minWidth:'120px',padding:'10px',background:'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',color:'white',border:'none',borderRadius:'8px',cursor:'pointer',fontWeight:'600'}}>
+                <span className="material-icons" style={{fontSize:'18px',verticalAlign:'middle',marginRight:'4px'}}>photo_camera</span>
+                Capturer
+              </button>
+              <label style={{flex:'1',minWidth:'120px',padding:'10px',background:'#e0e0e0',color:'#333',border:'none',borderRadius:'8px',cursor:'pointer',fontWeight:'600',textAlign:'center',display:'inline-block'}}>
+                <span className="material-icons" style={{fontSize:'18px',verticalAlign:'middle',marginRight:'4px'}}>photo_library</span>
+                Galerie
+                <input type="file" accept="image/*" onChange={handlePhotoSelect} style={{display:'none'}} />
+              </label>
+            </div>
+          </div>
 
           <input className="full" name="adresse" placeholder="Adresse" onChange={handleChange} />
           <input name="tele" placeholder="Téléphone" onChange={handleChange} />
